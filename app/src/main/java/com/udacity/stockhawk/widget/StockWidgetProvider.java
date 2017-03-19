@@ -31,43 +31,9 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
             Intent mainActivityIntent = new Intent(context, MainActivity.class);
             PendingIntent mainActivityPendingIntent = PendingIntent.getActivity
-                    (context, 1, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    (context, 1, mainActivityIntent, PendingIntent.FLAG_ONE_SHOT);
             rv.setOnClickPendingIntent(R.id.widget_title, mainActivityPendingIntent);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            rv.setOnClickPendingIntent(R.id.widget_title, pendingIntent);
-
-
-//
-//
-//
-//
-//            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-//            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-//
-//
-//
-//
-//
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-//                setRemoteAdapter(context, views);
-//            } else {
-//                setRemoteAdapterV11(context, views);
-//            }
-//
-//
-//            rv.setRemoteAdapter(appWidgetIds[i], R.id.list_view, intent);
-//            rv.setEmptyView(R.id.list_view, R.id.empty_view);
-//
-//            Intent appIntent = new Intent(context, MainActivity.class);
-//            PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, 0);
-//            rv.setOnClickPendingIntent(R.id.list_view, appPendingIntent);
-
-
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
-//            appWidgetManager.notifyAppWidgetViewDataChanged(i,
-//                    R.id.list_view);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
