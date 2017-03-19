@@ -89,8 +89,6 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         } else {
             holder.change.setText(percentage);
         }
-
-
     }
 
     @Override
@@ -101,7 +99,6 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         }
         return count;
     }
-
 
     interface StockAdapterOnClickHandler {
         void onClick(String symbol);

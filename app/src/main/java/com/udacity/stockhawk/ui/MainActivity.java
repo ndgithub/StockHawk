@@ -1,6 +1,8 @@
 package com.udacity.stockhawk.ui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +25,17 @@ import android.widget.Toast;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.sync.QuoteIntentService;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.udacity.stockhawk.sync.ValidateQuoteService;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
@@ -44,9 +53,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView error;
     private StockAdapter adapter;
 
-    @Override
+    @Override //From StockAdapter
     public void onClick(String symbol) {
+
         Timber.d("Symbol clicked: %s", symbol);
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("symbol", symbol);
+        startActivity(intent);
     }
 
     @Override
@@ -63,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
         onRefresh();
+
 
         QuoteSyncJob.initialize(this);
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
@@ -117,17 +131,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
+        final String stockSymbol = symbol;
         if (symbol != null && !symbol.isEmpty()) {
-
             if (networkUp()) {
-                swipeRefreshLayout.setRefreshing(true);
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            Stock stock = YahooFinance.get(stockSymbol);
+                            if (stock.getQuote().getPreviousClose() != null) {
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+                                        PrefUtils.addStock(getApplicationContext(), stockSymbol);
+                                        QuoteSyncJob.syncImmediately(getApplicationContext());
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(), stockSymbol + "does not exist", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        } catch (IOException e) {
+                            Log.v("asdf", "uh oh sphageetti oh");
+                        }
+                    }
+                }).start();
+
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
-            PrefUtils.addStock(this, symbol);
-            QuoteSyncJob.syncImmediately(this);
         }
     }
 
@@ -149,13 +185,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.setCursor(data);
     }
 
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         swipeRefreshLayout.setRefreshing(false);
         adapter.setCursor(null);
     }
-
 
     private void setDisplayModeMenuItemIcon(MenuItem item) {
         if (PrefUtils.getDisplayMode(this)
@@ -186,4 +220,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
