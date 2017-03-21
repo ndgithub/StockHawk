@@ -46,8 +46,6 @@ public final class QuoteSyncJob {
 
     static void getQuotes(Context context) {
 
-        Timber.d("Running sync job");
-
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
         from.add(Calendar.YEAR, -YEARS_OF_HISTORY);
@@ -59,7 +57,6 @@ public final class QuoteSyncJob {
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
 
-            Timber.d(stockCopy.toString() + "asdf");
 
             if (stockArray.length == 0) {
                 return;
@@ -68,7 +65,6 @@ public final class QuoteSyncJob {
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
-            Timber.d(quotes.toString() + "poop");
 
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 
@@ -79,37 +75,33 @@ public final class QuoteSyncJob {
 
                 StockQuote quote = stock.getQuote();
 
-                //if (quote.getAsk() != null) {
-                    float price = quote.getPrice().floatValue();
-                    float change = quote.getChange().floatValue();
-                    float percentChange = quote.getChangeInPercent().floatValue();
 
-                    // WARNING! Don't request historical data for a stock that doesn't exist!
-                    // The request will hang forever X_x
-                    List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+                float price = quote.getPrice().floatValue();
+                float change = quote.getChange().floatValue();
+                float percentChange = quote.getChangeInPercent().floatValue();
 
-                    StringBuilder historyBuilder = new StringBuilder();
+                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
 
-                    for (HistoricalQuote it : history) {
-                        historyBuilder.append(it.getDate().getTimeInMillis());
-                        historyBuilder.append(", ");
-                        historyBuilder.append(it.getClose());
-                        historyBuilder.append("\n");
-                    }
+                StringBuilder historyBuilder = new StringBuilder();
 
-                    ContentValues quoteCV = new ContentValues();
-                    quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
-                    quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
-                    quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
-                    quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
+                for (HistoricalQuote it : history) {
+                    historyBuilder.append(it.getDate().getTimeInMillis());
+                    historyBuilder.append(", ");
+                    historyBuilder.append(it.getClose());
+                    historyBuilder.append("\n");
+                }
+
+                ContentValues quoteCV = new ContentValues();
+                quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
+                quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
+                quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
+                quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
 
 
-                    quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
+                quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
 
-                    quoteCVs.add(quoteCV);
-//                } else {
-//                    PrefUtils.removeStock(context,symbol);
-//                }
+                quoteCVs.add(quoteCV);
+
             }
 
             context.getContentResolver()
@@ -126,7 +118,6 @@ public final class QuoteSyncJob {
     }
 
     private static void schedulePeriodic(Context context) {
-        Timber.d("Scheduling a periodic task");
 
         //JobInfo is a data container for sending work to the job scheduler. It encapsulates the parameters of the job.
         //Contstruct builder with joh number and component name

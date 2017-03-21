@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,13 +107,13 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         mCursor.moveToPosition(position);
 
-        rv.setTextViewText(R.id.symbol,mCursor.getString(Contract.Quote.POSITION_SYMBOL));
+        String symbol = mCursor.getString(Contract.Quote.POSITION_SYMBOL);
+        rv.setTextViewText(R.id.symbol,symbol);
         rv.setTextViewText(R.id.price,dollarFormat.format(mCursor.getFloat(Contract.Quote.POSITION_PRICE)));
 
 
         float rawAbsoluteChange = mCursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
         float percentageChange = mCursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
-        Log.v("service","rawAbsoluteChange: " + rawAbsoluteChange + ", percentageChange: " + percentageChange);
         if (rawAbsoluteChange > 0) {
             rv.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
         } else {
@@ -121,16 +122,23 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         String change = dollarFormatWithPlus.format(rawAbsoluteChange);
         String percentage = percentageFormat.format(percentageChange / 100);
 
-        Log.v("service","change: " + change + ", percentage: " + percentage + " display mode: " + PrefUtils.getDisplayMode(mContext) + " R.string.pref: " + R.string.pref_display_mode_absolute_key);
-       // TODO: Fix this
         if (PrefUtils.getDisplayMode(mContext)
                 .equals(mContext.getString(R.string.pref_display_mode_absolute_key))) {
             rv.setTextViewText(R.id.change,change);
-            Log.v("service","1");
         } else {
             rv.setTextViewText(R.id.change,percentage);
-            Log.v("service","2");
         }
+
+
+        Bundle extras = new Bundle();
+        extras.putString("symbol", symbol);
+
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtras(extras);
+        rv.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
+
+
+
         return rv;
     }
 

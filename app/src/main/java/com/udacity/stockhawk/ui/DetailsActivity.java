@@ -31,7 +31,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         String stockSymbol = getIntent().getStringExtra("symbol");
 
         String[] projection = {Contract.Quote.COLUMN_SYMBOL,
@@ -39,21 +38,22 @@ public class DetailsActivity extends AppCompatActivity {
                 Contract.Quote.COLUMN_ABSOLUTE_CHANGE,
                 Contract.Quote.COLUMN_PERCENTAGE_CHANGE, Contract.Quote.COLUMN_HISTORY};
 
-        Cursor cursor = getContentResolver().query(Contract.Quote.makeUriForStock(stockSymbol),projection,Contract.Quote.COLUMN_SYMBOL + " = " + stockSymbol,null,null);
+        Cursor cursor = getContentResolver().query(Contract.Quote.makeUriForStock(stockSymbol), projection, Contract.Quote.COLUMN_SYMBOL + " = " + stockSymbol, null, null);
         String price;
         String history = "";
-        TextView priceView =  (TextView) findViewById(R.id.price);
+        String symbol;
+        TextView priceView = (TextView) findViewById(R.id.price);
+        String
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
-                price = cursor.getString(0);
-                history = cursor.getString(4);
-                priceView.setText(price + "\n" + cursor.getString(1));
-            } while(cursor.moveToNext());
+                symbol = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL));
+                price = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE));
+                history = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_HISTORY));
+                priceView.setText(symbol + "\n" + price);
+            } while (cursor.moveToNext());
         }
         cursor.close();
-
-        Log.v("sdf","" + history);
 
         LineChart chart = (LineChart) findViewById(R.id.chart);
 
@@ -65,13 +65,13 @@ public class DetailsActivity extends AppCompatActivity {
         historyList = (String[]) list.toArray();
 
 
-        for (String string: historyList) {
+        for (String string : historyList) {
             String[] splitString = string.split(", ");
-            stockHistory.add(new Entry(Float.valueOf(splitString[0]),Float.valueOf(splitString[1])));
-            Log.v("##",Float.valueOf(splitString[0]) + " --- " + Float.valueOf(splitString[1]));
+            stockHistory.add(new Entry(Float.valueOf(splitString[0]), Float.valueOf(splitString[1])));
+            Log.v("##", Float.valueOf(splitString[0]) + " --- " + Float.valueOf(splitString[1]));
         }
 
-        LineDataSet dataSet = new LineDataSet(stockHistory,"historyLabel");
+        LineDataSet dataSet = new LineDataSet(stockHistory, "historyLabel");
         LineData lineData = new LineData(dataSet);
         lineData.setDrawValues(false);
         chart.setData(lineData);
@@ -82,7 +82,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void formatChart(LineChart chart) {
         XAxis xAxis = chart.getXAxis();
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setValueFormatter(new DateFormatter());
+        xAxis.setValueFormatter(new DateFormatter(getApplicationContext()));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
         Legend legend = chart.getLegend();

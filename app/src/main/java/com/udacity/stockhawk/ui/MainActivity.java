@@ -149,12 +149,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             } else {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
-                                        Toast.makeText(getApplicationContext(), stockSymbol + "does not exist", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), stockSymbol + " " + getString(R.string.not_found), Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
                         } catch (IOException e) {
-                            Log.v("asdf", "uh oh sphageetti oh");
+
                         }
                     }
                 }).start();
