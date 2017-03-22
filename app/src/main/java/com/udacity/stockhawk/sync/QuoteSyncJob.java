@@ -77,6 +77,8 @@ public final class QuoteSyncJob {
                 float price = quote.getPrice().floatValue();
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
+
+
                 String fullName = stock.getName();
                 String stockExchange = stock.getStockExchange();
 

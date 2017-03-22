@@ -46,7 +46,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView exchangeView;
     @BindView(R.id.chart)
     LineChart chartView;
-
+    @BindView(R.id.full_name)
+    TextView fullNameView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +61,14 @@ public class DetailsActivity extends AppCompatActivity {
         String[] projection = {Contract.Quote.COLUMN_SYMBOL,
                 Contract.Quote.COLUMN_PRICE,
                 Contract.Quote.COLUMN_ABSOLUTE_CHANGE,
-                Contract.Quote.COLUMN_PERCENTAGE_CHANGE, Contract.Quote.COLUMN_HISTORY, Contract.Quote.COLUMN_EXCHANGE};
+                Contract.Quote.COLUMN_PERCENTAGE_CHANGE, Contract.Quote.COLUMN_HISTORY, Contract.Quote.COLUMN_EXCHANGE, Contract.Quote.COLUMN_FULL_NAME};
 
         Cursor cursor = getContentResolver().query(Contract.Quote.makeUriForStock(stockSymbol), projection, Contract.Quote.COLUMN_SYMBOL + " = " + stockSymbol, null, null);
         String price;
         String history = null;
         String exchange;
         String symbol;
-
+        String fullName;
 
         if (cursor.moveToFirst()) {
             do {
@@ -75,10 +76,14 @@ public class DetailsActivity extends AppCompatActivity {
                 price = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE));
                 history = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_HISTORY));
                 exchange = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_EXCHANGE));
+                fullName = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_FULL_NAME));
+
 
                 symbolView.setText(symbol);
                 exchangeView.setText(exchange);
                 priceView.setText(price);
+                fullNameView.setText(fullName);
+
                 Log.v("!!","Symbol: " + symbol + ",Price: " + price + ", Exchange: " + exchange);
             } while (cursor.moveToNext());
         }
@@ -98,7 +103,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         LineDataSet dataSet = new LineDataSet(stockHistory, "historyLabel");
         dataSet.setDrawCircles(false);
-        dataSet.setColors(new int[] {R.color.material_orange_800},getApplicationContext());
+        dataSet.setColors(new int[] {R.color.colorAccent},getApplicationContext());
+        dataSet.setLineWidth(3);
         LineData lineData = new LineData(dataSet);
         chartView.setData(lineData);
         formatChart(chartView);
