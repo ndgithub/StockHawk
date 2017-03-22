@@ -21,6 +21,8 @@ public final class Contract {
 
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_QUOTE).build();
         public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_FULL_NAME ="full_name";
+        public static final String COLUMN_EXCHANGE = "stock_exchange";
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_ABSOLUTE_CHANGE = "absolute_change";
         public static final String COLUMN_PERCENTAGE_CHANGE = "percentage_change";
@@ -34,11 +36,14 @@ public final class Contract {
         public static final ImmutableList<String> QUOTE_COLUMNS = ImmutableList.of(
                 _ID,
                 COLUMN_SYMBOL,
+                COLUMN_FULL_NAME,
+                COLUMN_EXCHANGE,
                 COLUMN_PRICE,
                 COLUMN_ABSOLUTE_CHANGE,
                 COLUMN_PERCENTAGE_CHANGE,
                 COLUMN_HISTORY
         );
+
         static final String TABLE_NAME = "quotes";
 
         public static Uri makeUriForStock(String symbol) {
@@ -48,7 +53,6 @@ public final class Contract {
         static String getStockFromUri(Uri queryUri) {
             return queryUri.getLastPathSegment();
         }
-
 
     }
 

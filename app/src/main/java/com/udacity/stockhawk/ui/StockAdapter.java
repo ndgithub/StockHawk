@@ -67,12 +67,12 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         cursor.moveToPosition(position);
 
 
-        holder.symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
-        holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
+        holder.symbol.setText(cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL)));
+        holder.price.setText(dollarFormat.format(cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE))));
+        holder.fullName.setText(cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_FULL_NAME)));
 
-
-        float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
-        float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
+        float rawAbsoluteChange = cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_ABSOLUTE_CHANGE));
+        float percentageChange = cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE));
 
         if (rawAbsoluteChange > 0) {
             holder.change.setBackgroundResource(R.drawable.percent_change_pill_green);
@@ -114,6 +114,9 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         @BindView(R.id.change)
         TextView change;
+
+        @BindView(R.id.full_name)
+        TextView fullName;
 
         StockViewHolder(View itemView) {
             super(itemView);

@@ -20,4 +20,7 @@
         <item name="android:textSize">25sp</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    <style name="StockNameTextStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>

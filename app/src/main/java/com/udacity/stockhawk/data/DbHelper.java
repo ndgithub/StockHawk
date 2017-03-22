@@ -23,6 +23,8 @@ class DbHelper extends SQLiteOpenHelper {
         String builder = "CREATE TABLE " + Quote.TABLE_NAME + " ("
                 + Quote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Quote.COLUMN_SYMBOL + " TEXT NOT NULL, "
+                + Quote.COLUMN_FULL_NAME + " TEXT NOT NULL,"
+                + Quote.COLUMN_EXCHANGE + " TEXT NOT NULL,"
                 + Quote.COLUMN_PRICE + " REAL NOT NULL, "
                 + Quote.COLUMN_ABSOLUTE_CHANGE + " REAL NOT NULL, "
                 + Quote.COLUMN_PERCENTAGE_CHANGE + " REAL NOT NULL, "
