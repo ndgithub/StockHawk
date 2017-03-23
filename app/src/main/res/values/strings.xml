@@ -34,5 +34,14 @@
     <string name="not_found">not found</string>
     <string name="widget_title">Stocks</string>
     <string name="add_stock">Add Stock</string>
+    <string name="open">Open: </string>
+    <string name="high">High: </string>
+    <string name="low">Low: </string>
+
+    <string name="market_cap">Market Cap: </string>
+    <string name="volume">Volume: </string>
+    <string name="avg_volume">Avg. Volume: </string>
+
+
 
 </resources>

@@ -9,4 +9,5 @@
     <color name="material_green_700">#00C853</color>
     <color name="material_orange_800">#EF6C00</color>
     <color name="material_orange_400">#FFA726</color>
+    <color name="line_color">#cccfff</color>
 </resources>

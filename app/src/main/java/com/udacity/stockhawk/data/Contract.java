@@ -22,11 +22,17 @@ public final class Contract {
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_QUOTE).build();
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_FULL_NAME ="full_name";
-        public static final String COLUMN_EXCHANGE = "stock_exchange";
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_ABSOLUTE_CHANGE = "absolute_change";
         public static final String COLUMN_PERCENTAGE_CHANGE = "percentage_change";
         public static final String COLUMN_HISTORY = "history";
+        public static final String COLUMN_VOLUME = "volume";
+        public static final String COLUMN_AVGVOLUME = "avg_volume";
+        public static final String COLUMN_MARKETCAP = "market_cap";
+        public static final String COLUMN_OPEN = "open";
+        public static final String COLUMN_HIGH = "high";
+        public static final String COLUMN_LOW = "low";
+
         public static final int POSITION_ID = 0;
         public static final int POSITION_SYMBOL = 1;
         public static final int POSITION_PRICE = 2;
@@ -37,7 +43,6 @@ public final class Contract {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_FULL_NAME,
-                COLUMN_EXCHANGE,
                 COLUMN_PRICE,
                 COLUMN_ABSOLUTE_CHANGE,
                 COLUMN_PERCENTAGE_CHANGE,

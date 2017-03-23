@@ -70,22 +70,23 @@ public final class QuoteSyncJob {
                 String symbol = iterator.next();
 
                 Stock stock = quotes.get(symbol);
-
                 StockQuote quote = stock.getQuote();
 
-
+                String fullName = stock.getName();
                 float price = quote.getPrice().floatValue();
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
+                float volume = quote.getVolume();
+                float avgVolume = quote.getAvgVolume();
+                float marketCap = stock.getStats().getMarketCap().floatValue();
+                float open = quote.getOpen().floatValue();
+                float high = quote.getDayHigh().floatValue();
+                float low = quote.getDayLow().floatValue();
 
 
-                String fullName = stock.getName();
-                String stockExchange = stock.getStockExchange();
 
                 List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
-
                 StringBuilder historyBuilder = new StringBuilder();
-
                 for (HistoricalQuote it : history) {
                     historyBuilder.append(it.getDate().getTimeInMillis());
                     historyBuilder.append(", ");
@@ -93,15 +94,21 @@ public final class QuoteSyncJob {
                     historyBuilder.append("\n");
                 }
 
+
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
                 quoteCV.put(Contract.Quote.COLUMN_FULL_NAME,fullName);
-                quoteCV.put(Contract.Quote.COLUMN_EXCHANGE,stockExchange);
                 quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
+                quoteCV.put(Contract.Quote.COLUMN_MARKETCAP, marketCap);
+                quoteCV.put(Contract.Quote.COLUMN_AVGVOLUME, avgVolume);
+                quoteCV.put(Contract.Quote.COLUMN_VOLUME, volume);
                 quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
+
+                quoteCV.put(Contract.Quote.COLUMN_OPEN, open);
+                quoteCV.put(Contract.Quote.COLUMN_LOW, low);
+                quoteCV.put(Contract.Quote.COLUMN_HIGH, high);
 
                 quoteCVs.add(quoteCV);
 

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#303030"
-    android:padding="16dp">
+    android:background="#303030">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,93 +16,161 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="618"
             android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+            android:layout_weight="618"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1000"
-                android:layout_marginRight="4dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark">
+            <TextView
+                android:id="@+id/full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                tools:text="Google, Inc." />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:id="@+id/symbol"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ffffff"
-                        android:textSize="36sp"
-                        tools:text="GOOG" />
-
-                    <TextView
-                        android:id="@+id/exchange"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.7"
-                        android:textColor="#ffffff"
-                        tools:text="Google, Inc." />
-
-                    <TextView
-                        android:id="@+id/full_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.7"
-                        android:textColor="#ffffff"
-                        tools:text="$135.00" />
-
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
-                android:layout_weight="618"
-                app:cardBackgroundColor="@color/cardview_dark_background">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_weight="1000"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:alpha="0.7"
-                        android:gravity="center"
+                        android:layout_marginRight="2dp"
+                        android:gravity="start"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="#ffffff"
-                        tools:text="NYSE" />
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        tools:text="123.56" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.7"
+                        android:text="USD"
+                        android:textColor="#ffffff"
+                        android:textSize="24dp" />
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="618">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="618"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/percent_change"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:textColor="@color/material_green_700"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            tools:text="+1.23%" />
+
+                        <TextView
+                            android:id="@+id/absolute_change"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:alpha="0.7"
+                            android:textColor="@color/material_green_700"
+                            android:textSize="24sp"
+                            tools:text="($0.43)" />
+                    </LinearLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/stock_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1000">
+
+                    <TextView
+                        android:id="@+id/more_labels"
+                        style="@style/LabelTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="618"
+                        tools:text="GOOG." />
+
+                    <TextView
+                        android:id="@+id/more_values"
+                        style="@style/ValueTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1000"
+                        tools:text="GOOG." />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="618">
+
+                    <TextView
+                        android:id="@+id/range_labels"
+                        style="@style/LabelTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="618"
+                        tools:text="GOOG." />
+
+                    <TextView
+                        android:id="@+id/ranges"
+                        style="@style/ValueTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1000"
+                        tools:text="GOOG." />
+                </LinearLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
 
 
-        <android.support.v7.widget.CardView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1000"
-            android:padding="4dp"
-            app:cardBackgroundColor="@color/cardview_dark_background">
+            android:padding="8dp">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="8dp" />
+                android:padding="4dp" />
 
-        </android.support.v7.widget.CardView>
-
+        </FrameLayout>
     </LinearLayout>
+
 
 </FrameLayout>
