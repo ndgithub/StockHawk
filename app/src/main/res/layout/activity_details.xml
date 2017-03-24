@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +15,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
             android:layout_weight="618"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
@@ -26,6 +24,7 @@
                 android:id="@+id/full_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:alpha="0.7"
                 android:textColor="#ffffff"
                 android:textSize="24sp"
@@ -161,13 +160,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1000"
-            android:padding="8dp">
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="4dp" />
+                android:layout_height="match_parent"/>
 
         </FrameLayout>
     </LinearLayout>

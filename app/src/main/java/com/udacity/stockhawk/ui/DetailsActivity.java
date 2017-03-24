@@ -1,16 +1,10 @@
 package com.udacity.stockhawk.ui;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.BinderThread;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -18,12 +12,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.google.common.collect.Lists;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,8 +25,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
 
 
 public class DetailsActivity extends AppCompatActivity {
@@ -80,7 +69,6 @@ public class DetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setElevation(0);
         String stockSymbol = getIntent().getStringExtra("symbol");
 
         String[] projection = {Contract.Quote.COLUMN_SYMBOL,
@@ -91,7 +79,7 @@ public class DetailsActivity extends AppCompatActivity {
                 ,Contract.Quote.COLUMN_OPEN};
 
         Cursor cursor = getContentResolver().query(Contract.Quote.makeUriForStock(stockSymbol), projection, Contract.Quote.COLUMN_SYMBOL + " = " + stockSymbol, null, null);
-        String price;
+        float price;
         String history = null;
         String symbol;
         String fullName;
@@ -108,9 +96,8 @@ public class DetailsActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             do {
                 symbol = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL));
-                price = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE));
+                price = cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE));
                 history = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_HISTORY));
-                //exchange = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_EXCHANGE));
                 fullName = cursor.getString(cursor.getColumnIndex(Contract.Quote.COLUMN_FULL_NAME));
                 percentChange = cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE));
                 absoluteChange = cursor.getFloat(cursor.getColumnIndex(Contract.Quote.COLUMN_ABSOLUTE_CHANGE));
@@ -124,8 +111,8 @@ public class DetailsActivity extends AppCompatActivity {
                 String change = dollarFormat.format(absoluteChange);
                 String percentage = percentageFormat.format(percentChange / 100);
 
-                //exchangeView.setText(exchange);
-                priceView.setText(price);
+                String priceFormatted = dollarFormat.format(price);
+                priceView.setText(priceFormatted);
                 fullNameView.setText(fullName);
                 percentView.setText(percentage);
                 absoluteView.setText("(" + change + ")");
@@ -146,8 +133,6 @@ public class DetailsActivity extends AppCompatActivity {
 
                 getSupportActionBar().setTitle(symbol);
 
-
-                Log.v("!!", "Symbol: " + symbol + ",Price: " + price);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -169,7 +154,7 @@ public class DetailsActivity extends AppCompatActivity {
         dataSet.setDrawFilled(true);
         dataSet.setFillColor(getResources().getColor(R.color.colorPrimary));
         dataSet.setColors(new int[]{R.color.colorPrimary}, getApplicationContext());
-        dataSet.setLineWidth(3);
+        dataSet.setLineWidth(2);
         LineData lineData = new LineData(dataSet);
         chartView.setData(lineData);
         formatChart(chartView);

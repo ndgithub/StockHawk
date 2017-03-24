@@ -1,6 +1,5 @@
 package com.udacity.stockhawk.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +23,7 @@ import android.widget.Toast;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
-import com.udacity.stockhawk.sync.QuoteIntentService;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
-import com.udacity.stockhawk.sync.ValidateQuoteService;
 
 import java.io.IOException;
 
@@ -181,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
+        } else {
+            error.setVisibility(View.VISIBLE);
         }
         adapter.setCursor(data);
     }

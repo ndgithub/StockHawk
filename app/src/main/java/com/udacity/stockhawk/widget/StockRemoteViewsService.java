@@ -5,26 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
-import com.udacity.stockhawk.data.StockProvider;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Created by Nicky on 3/7/17.
- */
-
-//RemoteViewsService is responsible for creating the RemoteViewsFactory (subclass of this class).
 
 public class StockRemoteViewsService extends RemoteViewsService {
     /**
@@ -41,8 +32,6 @@ public class StockRemoteViewsService extends RemoteViewsService {
 }
 
 
-// The remote views factory is just the adaptor for the ListView in the Widget. It's like the cursor adaptor, but
-// it returns remoteViews suitable for widgets.
 class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private int mWidgetId;
@@ -65,10 +54,7 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         percentageFormat.setMinimumFractionDigits(2);
         percentageFormat.setPositivePrefix("+");
     }
-    /**
-     * Called when your factory is first constructed. The same factory may be shared across
-     * multiple RemoteViewAdapters depending on the intent passed.
-     */
+
     @Override
     public void onCreate() {
 
@@ -107,13 +93,13 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         mCursor.moveToPosition(position);
 
-        String symbol = mCursor.getString(Contract.Quote.POSITION_SYMBOL);
+        String symbol = mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL));
         rv.setTextViewText(R.id.symbol,symbol);
-        rv.setTextViewText(R.id.price,dollarFormat.format(mCursor.getFloat(Contract.Quote.POSITION_PRICE)));
+        rv.setTextViewText(R.id.price,dollarFormat.format(mCursor.getFloat(mCursor.getColumnIndex(Contract.Quote.COLUMN_PRICE))));
 
+        float rawAbsoluteChange = mCursor.getFloat(mCursor.getColumnIndex(Contract.Quote.COLUMN_ABSOLUTE_CHANGE));
+        float percentageChange = mCursor.getFloat(mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE));
 
-        float rawAbsoluteChange = mCursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
-        float percentageChange = mCursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
         if (rawAbsoluteChange > 0) {
             rv.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
         } else {
@@ -129,15 +115,12 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             rv.setTextViewText(R.id.change,percentage);
         }
 
-
         Bundle extras = new Bundle();
         extras.putString("symbol", symbol);
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
-
-
 
         return rv;
     }

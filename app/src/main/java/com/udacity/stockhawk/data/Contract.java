@@ -46,7 +46,12 @@ public final class Contract {
                 COLUMN_PRICE,
                 COLUMN_ABSOLUTE_CHANGE,
                 COLUMN_PERCENTAGE_CHANGE,
-                COLUMN_HISTORY
+                COLUMN_HISTORY,
+                COLUMN_VOLUME,
+                COLUMN_AVGVOLUME,
+                COLUMN_OPEN,
+                COLUMN_HIGH,
+                COLUMN_LOW
         );
 
         static final String TABLE_NAME = "quotes";

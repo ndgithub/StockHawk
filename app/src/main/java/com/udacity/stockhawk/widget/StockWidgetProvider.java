@@ -28,6 +28,8 @@ public class StockWidgetProvider extends AppWidgetProvider {
             Intent intent = new Intent(context, StockRemoteViewsService.class);
             rv.setRemoteAdapter(appWidgetIds[i], R.id.list_view, intent);
 
+            rv.setEmptyView(R.id.list_view,R.id.empty_view);
+
             //Sets up click listener for title to go to Main Activity
             Intent mainActivityIntent = new Intent(context, MainActivity.class);
             PendingIntent mainActivityPendingIntent = PendingIntent.getActivity
