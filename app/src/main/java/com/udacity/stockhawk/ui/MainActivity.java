@@ -1,5 +1,7 @@
 package com.udacity.stockhawk.ui;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,7 @@ import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.udacity.stockhawk.widget.StockWidgetProvider;
 
 import java.io.IOException;
 
@@ -32,6 +36,8 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
+
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
@@ -88,9 +94,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
                 PrefUtils.removeStock(MainActivity.this, symbol);
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
+
+                QuoteSyncJob.updateWidget(getApplicationContext());
+
+
             }
         }).attachToRecyclerView(stockRecyclerView);
-
 
     }
 
@@ -127,41 +136,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
-        final String stockSymbol = symbol;
         if (symbol != null && !symbol.isEmpty()) {
             if (networkUp()) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            Stock stock = YahooFinance.get(stockSymbol);
-                            if (stock.getQuote().getPreviousClose() != null) {
-                                runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        swipeRefreshLayout.setRefreshing(true);
-                                        PrefUtils.addStock(getApplicationContext(), stockSymbol);
-                                        QuoteSyncJob.syncImmediately(getApplicationContext());
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(), stockSymbol + " " + getString(R.string.not_found), Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                        } catch (IOException e) {
-
-                        }
-                    }
-                }).start();
-
+                swipeRefreshLayout.setRefreshing(true);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
-
+            PrefUtils.addStock(getApplicationContext(), symbol);
+            QuoteSyncJob.syncImmediately(getApplicationContext());
         }
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -217,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+
     }
 
 }

@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -68,6 +70,10 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
+
+        float priceHeight = priceView.getHeight();
+        Log.v("###", "priceHeight: " + priceHeight);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String stockSymbol = getIntent().getStringExtra("symbol");
 
@@ -76,7 +82,7 @@ public class DetailsActivity extends AppCompatActivity {
                 Contract.Quote.COLUMN_ABSOLUTE_CHANGE,
                 Contract.Quote.COLUMN_PERCENTAGE_CHANGE, Contract.Quote.COLUMN_HISTORY, Contract.Quote.COLUMN_FULL_NAME, Contract.Quote.COLUMN_MARKETCAP
                 , Contract.Quote.COLUMN_AVGVOLUME, Contract.Quote.COLUMN_VOLUME, Contract.Quote.COLUMN_LOW, Contract.Quote.COLUMN_HIGH
-                ,Contract.Quote.COLUMN_OPEN};
+                , Contract.Quote.COLUMN_OPEN};
 
         Cursor cursor = getContentResolver().query(Contract.Quote.makeUriForStock(stockSymbol), projection, Contract.Quote.COLUMN_SYMBOL + " = " + stockSymbol, null, null);
         float price;
@@ -121,7 +127,7 @@ public class DetailsActivity extends AppCompatActivity {
                 rangeValuesView.setText(open + "\n" + high + "\n" + low);
                 moreLabelsView.setText(getString(R.string.market_cap) + "\n" + getString(R.string.volume) + "\n" + getString(R.string.avg_volume));
                 moreValuesView.setText(marketCap + "\n" + volume + "\n" + avgVolume);
-
+                Log.v("###", "" + marketCap);
                 if (percentChange > 0) {
                     percentView.setTextColor(getResources().getColor(R.color.material_green_700));
                     absoluteView.setTextColor(getResources().getColor(R.color.material_green_700));
@@ -137,46 +143,68 @@ public class DetailsActivity extends AppCompatActivity {
         }
         cursor.close();
 
+        if (history != null && !history.isEmpty()) {
+            String[] historyList = history.split("\n");
+            List<String> list = Arrays.asList(historyList);
+            Collections.reverse(list);
+            historyList = (String[]) list.toArray();
+            List<Entry> stockHistory = new ArrayList<>();
+            for (String string : historyList) {
+                Log.v("history", string);
+                String[] splitString = string.split(", ");
+                Log.v("!!!", splitString[0] + " " + splitString[1]);
+                stockHistory.add(new Entry(Float.valueOf(splitString[0]), Float.valueOf(splitString[1])));
+                Log.v("asdf", Float.valueOf(splitString[0]) + "");
+            }
 
-        String[] historyList = history.split("\n");
-        List<String> list = Arrays.asList(historyList);
-        Collections.reverse(list);
-        historyList = (String[]) list.toArray();
+            LineDataSet dataSet = new LineDataSet(stockHistory, "historyLabel");
 
-        List<Entry> stockHistory = new ArrayList<>();
-        for (String string : historyList) {
-            String[] splitString = string.split(", ");
-            stockHistory.add(new Entry(Float.valueOf(splitString[0]), Float.valueOf(splitString[1])));
+            LineData lineData = new LineData(dataSet);
+            chartView.setData(lineData);
+            formatChart(chartView, dataSet);
+            chartView.invalidate();
         }
-
-        LineDataSet dataSet = new LineDataSet(stockHistory, "historyLabel");
-        dataSet.setDrawCircles(false);
-        dataSet.setDrawFilled(true);
-        dataSet.setFillColor(getResources().getColor(R.color.colorPrimary));
-        dataSet.setColors(new int[]{R.color.colorPrimary}, getApplicationContext());
-        dataSet.setLineWidth(2);
-        LineData lineData = new LineData(dataSet);
-        chartView.setData(lineData);
-        formatChart(chartView);
-        chartView.invalidate();
     }
 
-    private void formatChart(LineChart chart) {
+    private void formatChart(LineChart chart, LineDataSet dataSet) {
+        int primaryColor = getResources().getColor(R.color.colorPrimary);
+        int backgroundColor = getResources().getColor(R.color.gray_background);
+
         XAxis xAxis = chart.getXAxis();
         xAxis.setTextColor(Color.WHITE);
         xAxis.setValueFormatter(new DateFormatter(getApplicationContext()));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+        xAxis.setAxisLineColor(backgroundColor);
+        xAxis.setAxisLineWidth(1.5f);
+        xAxis.enableGridDashedLine(20, 10, 0);
+
         YAxis yAxisLeft = chart.getAxisLeft();
+        yAxisLeft.setAxisLineColor(backgroundColor);
         yAxisLeft.setTextColor(Color.WHITE);
+        yAxisLeft.setAxisLineWidth(1.5f);
+        //yAxisLeft.enableGridDashedLine(20,40,0);
+
 
         YAxis yAxisRight = chart.getAxisRight();
         yAxisRight.setTextColor(Color.WHITE);
+        yAxisRight.setAxisLineColor(backgroundColor);
+        //yAxisRight.setAxisLineWidth(2);
+
+        yAxisRight.enableGridDashedLine(20, 40, 0);
+
 
         chart.setDrawGridBackground(false);
 
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
+
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawFilled(true);
+        dataSet.setFillColor(backgroundColor);
+        dataSet.setColors(new int[]{R.color.line_color}, getApplicationContext());
+        dataSet.setLineWidth(2);
+
     }
 }
 

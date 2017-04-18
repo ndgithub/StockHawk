@@ -14,11 +14,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="618"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:paddingLeft="16dp">
+            android:paddingStart="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/full_name"
@@ -46,11 +46,11 @@
                         android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
+                        android:layout_marginEnd="2dp"
                         android:gravity="start"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="#ffffff"
-                        android:textSize="48sp"
+                        android:textSize="32sp"
                         android:textStyle="bold"
                         tools:text="123.56" />
 
@@ -81,7 +81,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:textColor="@color/material_green_700"
-                            android:textSize="36sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             tools:text="+1.23%" />
 
@@ -108,46 +108,40 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1000">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/more_labels"
                         style="@style/LabelTextStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="618"
                         tools:text="GOOG." />
 
                     <TextView
                         android:id="@+id/more_values"
                         style="@style/ValueTextStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1000"
                         tools:text="GOOG." />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="618">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/range_labels"
                         style="@style/LabelTextStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="618"
                         tools:text="GOOG." />
 
                     <TextView
                         android:id="@+id/ranges"
                         style="@style/ValueTextStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1000"
                         tools:text="GOOG." />
                 </LinearLayout>
 

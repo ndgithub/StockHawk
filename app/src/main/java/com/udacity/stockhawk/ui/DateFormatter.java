@@ -41,19 +41,6 @@ public class DateFormatter implements IAxisValueFormatter {
         int mMonth = calendar.get(Calendar.MONTH);
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
         String stockDate = mMonth + "-" + mDay + "-" + mYear;
-        SimpleDateFormat sdf = new SimpleDateFormat("mm-dd-yyyy");
-        Date date;
-
-        try {
-            date = sdf.parse(stockDate);
-        } catch (ParseException e) {
-            Log.v("!!!!","Exception: " + e);
-            return " ";
-        }
-
-        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(mContext);
-        return dateFormat.format(date);
-
-
+        return stockDate;
     }
 }

@@ -3,8 +3,10 @@ package com.udacity.stockhawk.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.sync.QuoteSyncJob;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,9 +25,8 @@ public final class PrefUtils {
         HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-
         boolean initialized = prefs.getBoolean(initializedKey, false);
-
+        Log.v("intitialized", ": " + initialized);
         if (!initialized) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(initializedKey, true);
@@ -33,8 +34,8 @@ public final class PrefUtils {
             editor.apply();
             return defaultStocks;
         }
-        return prefs.getStringSet(stocksKey, new HashSet<String>());
 
+        return new HashSet<>(prefs.getStringSet(stocksKey, new HashSet<String>()));
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
@@ -45,12 +46,14 @@ public final class PrefUtils {
             stocks.add(symbol);
         } else {
             stocks.remove(symbol);
+
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putStringSet(key, stocks);
         editor.apply();
+
     }
 
     public static void addStock(Context context, String symbol) {
@@ -59,6 +62,7 @@ public final class PrefUtils {
 
     public static void removeStock(Context context, String symbol) {
         editStockPref(context, symbol, false);
+        context.getContentResolver().delete(Contract.Quote.makeUriForStock(symbol),null,null);
     }
 
     public static String getDisplayMode(Context context) {
