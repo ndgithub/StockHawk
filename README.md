@@ -5,8 +5,8 @@ Android application thats displays stock information from the Yahoo Finance API.
 <table>
   <tr>
     <td>
-<img src="https://raw.githubusercontent.com/ndgithub/popular-movies/master/screenshots/Screenshot_1490250503.png" alt="alt text" width="300"> </td>
+<img src="https://raw.githubusercontent.com/ndgithub/Stockhawk/master/screenshots/Screenshot_1490250503.png" alt="alt text" width="300"> </td>
     <td>
-<img src="https://raw.githubusercontent.com/ndgithub/popular-movies/master/screenshots/Screenshot_1490251984.png" alt="alt text" width="300"></td></tr></table>
+<img src="https://raw.githubusercontent.com/ndgithub/stockhawk/screenshots/Screenshot_1490251984.png" alt="alt text" width="300"></td></tr></table>
 
 
