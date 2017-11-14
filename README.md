@@ -1,5 +1,5 @@
 # Stock Hawk
-Android application thats displays stock information from the Yahoo Finance API. This app was created to satisfy the requirements of Project 3 of Udacity Android Developers NanoDegree. 
+Android application thats displays stock information from the Yahoo Finance API. Starter code was given by Udacity and can be found <a href = "https://github.com/udacity/StockHawk">here</a>.
 
 ## Screenshots
 <table>
